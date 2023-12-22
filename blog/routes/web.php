@@ -18,9 +18,14 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
-         
-    $router->group(['prefix' => 'post'], function () use ($router) {
-        $router->get('/list', 'PostController@index');
-        $router->post('/create', 'PostController@store');
-    });
+
+    $router->post('/login', 'AuthController@login');
+
+    $router->group(['middleware' => 'auth'], function () use ($router) {
+        $router->group(['prefix' => 'post'], function () use ($router) {
+            $router->get('/list', 'PostController@index');
+            $router->post('/create', 'PostController@store');
+        });
+    }); 
+   
 });
