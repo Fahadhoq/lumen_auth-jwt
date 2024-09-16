@@ -8,7 +8,6 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        
         //validate incoming request
         $this->validate($request, [
             'password' => 'required|string',
@@ -16,13 +15,11 @@ class AuthController extends Controller
 
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->error('User email or password does not match', 401);
         }else{
             return $this->respondWithToken($token);
         }
-
-
     }
 
     protected function respondWithToken($token)

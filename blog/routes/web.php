@@ -13,11 +13,26 @@
 |
 */
 
+
+
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    /**
+     * @var $routeCollection \Illuminate\Database\Eloquent\Collection
+     */
+    $routeCollection = $router->getRoutes();
+    $routes = [];
+    foreach ($routeCollection as $value) {
+        $routes[] = [
+            'method' => $value['method'],
+            'uri'    => $value['uri']
+        ];
+    }
+
+    return $routes;
 });
 
-$router->group(['prefix' => 'api'], function () use ($router) {
+
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->post('/login', 'AuthController@login');
 
