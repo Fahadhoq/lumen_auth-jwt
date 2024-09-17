@@ -35,8 +35,11 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
     $router->post('/login', 'AuthController@login');
-
+    
     $router->group(['middleware' => 'auth'], function () use ($router) {
+        $router->post('/logout', 'AuthController@logout');
+        $router->get('/refreshApi', 'AuthController@refresh');
+
         $router->group(['prefix' => 'post'], function () use ($router) {
             $router->get('/list', 'PostController@index');
             $router->post('/create', 'PostController@store');

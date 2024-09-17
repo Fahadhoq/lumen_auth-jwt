@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Auth;
 class AuthController extends Controller
 {
     public function login(Request $request)
@@ -22,12 +22,30 @@ class AuthController extends Controller
         }
     }
 
+    public function refresh()
+    {
+        return $this->respondWithToken(Auth::refresh());
+    }
+
     protected function respondWithToken($token)
     {
-        return response()->json([
-            'access_token' => $token,
+        return response()->success([
+            'token'      => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => Auth::factory()->getTTL() * 60,
+            'user' => $this->getAuthUser(),
         ]);
+    }
+
+    protected function getAuthUser()
+    {
+        return Auth::user();
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        return response()->json(['message' => 'LOGGEDOUT'], 200);
     }
 }
