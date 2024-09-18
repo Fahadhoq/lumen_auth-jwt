@@ -48,6 +48,13 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->singleton(Illuminate\Contracts\Routing\ResponseFactory::class, function ($app) {
+    return new Illuminate\Routing\ResponseFactory(
+        $app['Illuminate\Contracts\View\Factory'],
+        $app['Illuminate\Routing\Redirector']
+    );
+});
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files

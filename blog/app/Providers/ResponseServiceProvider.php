@@ -18,13 +18,22 @@ class ResponseServiceProvider extends ServiceProvider
             return response()->json($json);
         });
 
-        $response::macro('error', function ($message, $reasonCode = ReasonCodeValues::BAD_REQUEST, $data = []) {
-            return response()->json([
+        $response::macro('error', function ($data = []) {
+            $json = [
+                'success'  => false,
+                'data'    => $data
+            ];
+            return response()->json($json);
+        });
+
+        $response::macro('exception', function ($message, $reasonCode = ReasonCodeValues::BAD_REQUEST, $data = []) {
+            $json = [
                 'success'  => false,
                 'rc'      => $reasonCode,
-                'message' => $message,
-                'data'    => $data
-            ]);
+                // 'message' => is_array($message) ? $message : ['message' => $message], // Ensure message is an array
+                'data'    => is_array($message) ? $message : ['message' => $message]
+            ];
+            return response()->json($json);
         });
     }
 
